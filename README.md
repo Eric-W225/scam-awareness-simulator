@@ -32,6 +32,16 @@ npm run build    # production build
 npm run preview  # preview the build
 ```
 
+## GitHub Pages
+
+This repo deploys with GitHub Actions (builds Vite → publishes `dist`).
+
+1. Repo **Settings → Pages → Source**: choose **GitHub Actions** (not “Deploy from a branch”).
+2. Push to `main` (or run the **Deploy to GitHub Pages** workflow).
+3. Site URL: https://eric-w225.github.io/scam-awareness-simulator/
+
+A white page usually means Pages was serving the raw `main` branch instead of the built app.
+
 ## Project structure
 
 ```text
