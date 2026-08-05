@@ -1,24 +1,69 @@
-﻿# Phishing Awareness Training
+﻿# Scam Awareness Simulator
 
-Educational cybersecurity demo: a simulated IRS phishing email, fake verification form, and teach-back page. **Authorized training use only.**
+A React + TypeScript training app where users practice spotting **fictional** phishing emails in a safe sandbox. No credentials are collected. Trainers may optionally email a scenario to consented trainees.
+
+## Features
+
+- Homepage titled **Scam Awareness Simulator** with two scenarios: **Bank Fraud** and **IRS Fraud**
+- Professionally formatted simulated emails with common phishing red flags
+- Interactive highlights — click colored phrases in the email to reveal explanations
+- **Red Flags You Should Notice** analysis panel
+- **Send to Email** on every scenario (EmailJS or `.eml` download) for authorized training only
+- Deep links (`?scenario=<id>&entry=email`) so emailed buttons open the matching scenario
+- Reset control to return to scenario selection
+- All in-app email buttons/links are disabled (teaching only)
+- Easy to extend with more scenarios via `src/data/scenarios.ts`
+
+Branding is fictional on purpose (example domains like `northbridge-secure-example.com` and `irs-refunds-example.com`). No real bank or IRS logos, phone numbers, or official URLs.
 
 ## Run locally
 
-Double-click `start-fake-irs-scam.bat`, then open:
+Requires [Node.js](https://nodejs.org/) (LTS).
 
-http://localhost:8080/fake-irs-scam.html
+```bash
+npm install
+npm run dev
+```
 
-Or open `fake-irs-scam.html` / `index.html` directly in a browser.
+Then open the URL Vite prints (usually `http://localhost:5173`).
 
-## What's included
+```bash
+npm run build    # production build
+npm run preview  # preview the build
+```
 
-- Mock email client with a convincing (but fake) IRS refund scam
-- Fake verification form — entered data is discarded, never stored or sent
-- Educational overlay with warning signs and IRS verification best practices
-- **Send to Email** for consented trainees (EmailJS or `.eml` download)
+## Project structure
 
-## Important
+```text
+src/
+  App.tsx                 # Switches between home and scenario view
+  components/
+    HomePage.tsx          # Title, description, scenario cards
+    ScenarioCard.tsx      # Reusable selection card
+    ScenarioView.tsx      # Email + analysis layout
+    SendToEmailPanel.tsx  # Per-scenario training email sender
+    SimulatedEmail.tsx    # Fake inbox message
+    EmailHighlight.tsx    # Clickable red-flag span
+    RedFlagsPanel.tsx     # Educational explanations
+  lib/sendTrainingEmail.ts
+  data/scenarios.ts       # Add new scam scenarios here
+  types/scenario.ts       # Shared TypeScript types
+```
 
-- Do not use this to scam anyone
-- Only send simulations to people who agreed to phishing-awareness training
-- No real IRS URLs, phone numbers, or email addresses are used
+## Send training emails
+
+**Step 1 — Consent & allowlist email** (home page): asks the recipient to reply **I AGREE**, mark the message **Not spam**, and add your address to Contacts. This message often lands in Spam on purpose.
+
+**Step 2 — Practice scenario email**: open a scenario → **Send to Email** after they allowlist you.
+
+Configure EmailJS (`to_email`, `subject`, `{{{message_html}}}`, `from_name`) or download a `.eml` and send from your mail app. Only train people who have agreed.
+
+## Add another scenario
+
+1. Open `src/data/scenarios.ts`
+2. Append a new object to the `SCENARIOS` array (same shape as Bank / IRS)
+3. The homepage card grid updates automatically
+
+## Legacy
+
+The previous static HTML simulation lives in `legacy-static/` for reference.

@@ -26,14 +26,14 @@
 
   const SCENARIO = {
     inbox: {
-      senderName: 'IRS Tax Refund Dept.',
+      senderName: 'IRS',
       subject: 'URGENT: Your Tax Refund of $847.00 Is Pending — Action Required Within 48 Hours',
       preview: 'Dear Taxpayer, We have determined that you are eligible for an unclaimed refund...',
       date: 'Today, 6:42 AM',
     },
 
     header: {
-      senderDisplayName: 'IRS Tax Refund Department',
+      senderDisplayName: 'IRS',
       // Suspicious look-alike domain — NOT a real IRS address (red flag)
       senderEmail: 'refunds-notice@irs-refunds-example.com',
       recipient: 'you@example.com',
