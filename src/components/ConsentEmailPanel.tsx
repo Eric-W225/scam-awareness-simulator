@@ -26,7 +26,7 @@ import {
 type StatusKind = 'idle' | 'info' | 'success' | 'error';
 
 export function ConsentEmailPanel() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [recipientEmail, setRecipientEmail] = useState('');
   const [trainerFromName, setTrainerFromName] = useState(() =>
     loadTrainerFromName(),
@@ -136,12 +136,12 @@ export function ConsentEmailPanel() {
     <section className="consent-email">
       <div className="consent-email-intro">
         <div>
-          <p className="consent-step-label">Step 1 · Often lands in Spam</p>
-          <h2>Send consent &amp; allowlist email</h2>
+          <p className="consent-step-label">Step 1 · Send this first (often lands in Spam)</p>
+          <h2>Consent &amp; “keep out of spam” email</h2>
           <p>
-            Separate from the scam simulation. Asks the recipient to agree to training
-            emails, mark this message <strong>Not spam</strong>, and allowlist your address
-            before you send practice scam emails.
+            Separate from the practice scam. Asks them to <strong>agree</strong> to receive
+            scam training emails, mark this message <strong>Not spam</strong>, and allowlist
+            your address so it stops going into Spam.
           </p>
         </div>
         <button

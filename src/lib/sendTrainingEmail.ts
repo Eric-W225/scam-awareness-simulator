@@ -115,36 +115,40 @@ function plainBody(scenario: ScamScenario): string {
   return scenario.email.body.map((segment) => segment.text).join('');
 }
 
-/** Consent email — often lands in Spam; asks for opt-in + allowlisting. */
+/**
+ * Consent email — separate from the practice scam.
+ * Often lands in Spam/Junk; asks the recipient to opt in and stop filtering this address.
+ */
 export function buildConsentOutboundMessage(
   trainerFromName: string,
   trainerEmail: string,
 ): OutboundMessage {
   const name = escapeHtml(trainerFromName);
   const address = escapeHtml(trainerEmail);
-  const replyHref = `mailto:${encodeURIComponent(trainerEmail)}?subject=${encodeURIComponent('I AGREE to scam awareness training emails')}&body=${encodeURIComponent('I AGREE to receive phishing-awareness / scam training practice emails from you.\n\nI will also add your address to my contacts and mark your messages as Not spam.')}`;
+  const replyHref = `mailto:${encodeURIComponent(trainerEmail)}?subject=${encodeURIComponent('I AGREE to scam awareness training emails')}&body=${encodeURIComponent(`I AGREE to be sent scam / phishing-awareness training practice emails from ${trainerEmail}.\n\nI will mark this message as Not spam and add ${trainerEmail} to my contacts so future training emails do not go to Spam.`)}`;
 
   const subject =
-    'Action needed: agree to scam training emails (check Spam / Junk)';
+    'Please check Spam: agree to scam training emails + allowlist this address';
 
   const html = `
     <div style="font-family:Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.65;color:#374151;max-width:640px;margin:0 auto;">
       <div style="background:#7f1d1d;color:#fff;padding:12px 16px;border-radius:8px;margin-bottom:18px;font-weight:700;">
-        If you are reading this in Spam or Junk — that is expected. Please follow the steps below.
+        This email often goes to Spam or Junk — that is expected. Open it there, then follow the steps.
       </div>
 
       <p>Hello,</p>
       <p>
         This message is from <strong>${name}</strong>
-        (<a href="mailto:${address}" style="color:#1d4ed8;">${address}</a>)
-        about an upcoming <strong>phishing / scam awareness training</strong> exercise.
+        (<a href="mailto:${address}" style="color:#1d4ed8;">${address}</a>).
+        It is <strong>not</strong> a scam. It asks for your permission before any
+        <strong>scam-awareness training</strong> practice emails are sent.
       </p>
 
-      <p><strong>Please do these three things:</strong></p>
+      <p><strong>Please do these two things:</strong></p>
       <ol style="padding-left:1.2rem;">
-        <li style="margin-bottom:10px;">
-          <strong>Agree</strong> to receive practice scam-training emails from this address
-          by replying to this message with <strong>I AGREE</strong>, or by clicking:
+        <li style="margin-bottom:14px;">
+          <strong>Agree</strong> to be sent scam training practice emails from this address.
+          Reply with <strong>I AGREE</strong>, or click:
           <p style="margin:10px 0;">
             <a href="${replyHref}"
                style="display:inline-block;padding:12px 20px;background:#1d4ed8;color:#fff;font-weight:700;text-decoration:none;border-radius:6px;">
@@ -152,44 +156,47 @@ export function buildConsentOutboundMessage(
             </a>
           </p>
         </li>
-        <li style="margin-bottom:10px;">
-          <strong>Remove this email from Spam / Junk</strong> so future training messages
-          can reach your Inbox:
+        <li style="margin-bottom:14px;">
+          <strong>Stop this email address from going to Spam</strong>
+          (<strong>${address}</strong>):
           <ul style="margin:8px 0 0;padding-left:1.1rem;">
-            <li><strong>Gmail:</strong> open this email → click the three dots → <em>Not spam</em></li>
-            <li><strong>Outlook / Yahoo / others:</strong> open this email → choose <em>Not junk</em> / <em>Not spam</em></li>
+            <li style="margin-bottom:6px;">
+              <strong>Remove this message from Spam:</strong>
+              Gmail → three dots → <em>Not spam</em>;
+              Outlook / others → <em>Not junk</em> / <em>Not spam</em>
+            </li>
+            <li>
+              <strong>Allowlist the address:</strong> add
+              <strong>${address}</strong> to Contacts or Safe Senders so future training
+              emails stay in your Inbox instead of Spam.
+            </li>
           </ul>
-        </li>
-        <li style="margin-bottom:10px;">
-          <strong>Allowlist this address:</strong> add
-          <strong>${address}</strong> to your Contacts (or Safe Senders), so mail from
-          ${name} is less likely to be filtered again.
         </li>
       </ol>
 
       <p>
-        After you agree and allowlist this address, you may receive a separate
-        <strong>practice scam email</strong> for training. Those practice messages are
-        fictional and for education only — they are not real IRS, bank, or government notices.
+        After you agree and allowlist <strong>${address}</strong>, you may receive a
+        separate <strong>practice scam email</strong> for training. Those messages are
+        fictional and for education only — not real IRS, bank, or government notices.
       </p>
 
       <p style="font-size:13px;color:#6b7280;">
         If you do not want this training, ignore this message or reply <strong>NO</strong>.
-        Do not share passwords or personal information in response to any email that claims
+        Never share passwords or personal information in response to emails that claim
         to be from the IRS or your bank.
       </p>
     </div>
   `.trim();
 
   const plain = [
-    'If you are reading this in Spam or Junk — that is expected. Please follow the steps below.',
+    'This email often goes to Spam or Junk — that is expected. Open it there, then follow the steps.',
     '',
-    `This message is from ${trainerFromName} (${trainerEmail}) about phishing / scam awareness training.`,
+    `This message is from ${trainerFromName} (${trainerEmail}). It is NOT a scam.`,
+    'It asks for your permission before any scam-awareness training practice emails are sent.',
     '',
-    'Please do these three things:',
-    '1) Agree to receive practice scam-training emails by replying "I AGREE".',
-    '2) Mark this email as Not spam / Not junk so future messages can reach Inbox.',
-    `3) Add ${trainerEmail} to your Contacts or Safe Senders.`,
+    'Please do these two things:',
+    '1) Agree to be sent scam training practice emails — reply "I AGREE".',
+    `2) Stop ${trainerEmail} from going to Spam: mark this message Not spam / Not junk, then add ${trainerEmail} to Contacts or Safe Senders.`,
     '',
     'After you agree, you may receive a separate practice scam email for training (fictional / educational only).',
     '',
