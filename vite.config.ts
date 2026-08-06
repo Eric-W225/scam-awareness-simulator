@@ -1,8 +1,12 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// GitHub Pages serves this repo at /scam-awareness-simulator/
+// GitHub Actions sets GITHUB_REPOSITORY to "owner/repo-name".
+// Project Pages URLs are https://<user>.github.io/<repo-name>/
+const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1];
+const base = repoName ? `/${repoName}/` : '/';
+
 export default defineConfig({
-  base: '/scam-awareness-simulator/',
+  base,
   plugins: [react()],
 });
